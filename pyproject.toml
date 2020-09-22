@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "fastbin"
+version = "0.1.0"
+description = "Performance orientated improvements to pycasbin"
+authors = ["Cameron Hurst <cameron.a.hurst@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+casbin = "^0.8.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.0"
+pytest-cov = "^2.8"
+flake8 = "^3.8"
+flake8-bugbear = "^20.1"
+isort = "^5.3"
+pre-commit = "^2.7"
+mypy = "^0.782.0"
+black = { version = "^19.10b0", allow-prereleases = true}
+coverage = {version = "^5.0b1", allow-prereleases = true}
+flake8-isort = "^4.0.0"
+eradicate = "^1.0"
+gitlint = "^0.12.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

@@ -1,0 +1,9 @@
+[flake8]
+max-line-length = 120
+max-complexity = 12
+ignore= E501,B950,E402,W503,E203
+select = B,C,E,F,I,N,W,B9,T4
+exclude =
+    dist,
+    build,
+    .venv
