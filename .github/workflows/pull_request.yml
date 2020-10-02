@@ -36,16 +36,16 @@ jobs:
           poetry-version: 1.1.0
       - name: poetry install
         run: poetry install
-      - name: poetry run
+      - name: Run iSort
         if: ${{ always() }}
         run: poetry run isort -v -c .
-      - name: poetry run
+      - name: Run Black
         if: ${{ always() }}
         run: poetry run black --check -v .
-      - name: poetry run
+      - name: Run Flake8
         if: ${{ always() }}
         run: poetry run flake8 -v .
-      - name: poetry run
+      - name: Run MyPy
         if: ${{ always() }}
         run: poetry run mypy ./src ./tests
 
