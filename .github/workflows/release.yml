@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  Linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+#      - name: Get tag
+#        id: tag
+#        run: |
+#          echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+#      - name: Building release
+#        run: |
+#          make linux_release
+#      - name: Upload distributions artifacts
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: pendulum-dist
+#          path: dist/wheelhouse

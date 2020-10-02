@@ -1,0 +1,70 @@
+---
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Run image
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.0.10
+      - name: poetry install
+        run: poetry install
+      - name: pytest
+        run: poetry run python -m pytest --cov ./src --cov-report term-missing
+
+  Linting:
+    needs: pytest
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.1.0
+      - name: poetry install
+        run: poetry install
+      - name: poetry run
+        run: poetry run isort -v -c .
+      - name: poetry run
+        run: poetry run black --check -v .
+      - name: poetry run
+        run: poetry run flake8 -v .
+      - name: poetry run
+        run: poetry run mypy ./src ./tests
+
+  pytest-matrix:
+    needs: pytest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.1.0
+      - name: poetry install
+        run: poetry install
+      - name: pytest
+        run: poetry run python -m pytest --cov ./src --cov-report term-missing
