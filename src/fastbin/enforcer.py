@@ -4,7 +4,7 @@ from casbin import Enforcer as CasbinEnforcer
 from casbin.model import Model as CasbinModel
 from casbin.model import Policy
 
-from fastbin.policy import FilteredPolicy
+from fastbin.policy import FilterablePolicy, filter_policy
 
 
 class Model(CasbinModel):
@@ -17,7 +17,12 @@ class Model(CasbinModel):
     def add_def(self, sec: str, key: str, value: Any) -> None:
         super().add_def(sec, key, value)
         if sec == "p" and key == "p":
-            self.model[sec][key].policy = FilteredPolicy(self._cache_key_order)
+            self.model[sec][key].policy = FilterablePolicy(self._cache_key_order)
+
+    def clear_policy(self) -> None:
+        """clears all current policy."""
+        super().clear_policy()
+        self.model["p"]["p"].policy = FilterablePolicy(self._cache_key_order)
 
 
 T = TypeVar("T", bound=CasbinModel)
@@ -34,9 +39,8 @@ class FastEnforcer(CasbinEnforcer):
         adapter: T2 = None,
         enable_log: bool = False,
     ):
-        super().__init__(model=model, adapter=adapter, enable_log=enable_log)
-
         self._cache_key_order = cache_key_order
+        super().__init__(model=model, adapter=adapter, enable_log=enable_log)
 
     def new_model(self, path: str = "", text: str = "") -> Model:
         """creates a model."""
@@ -50,7 +54,6 @@ class FastEnforcer(CasbinEnforcer):
         return m
 
     def enforce(self, *rvals: str) -> bool:
-        self.model.model["p"]["p"].policy.apply_filter(rvals[1], rvals[2])
-        result = super().enforce(*rvals)
-        self.model.model["p"]["p"].policy.clear_filter()
-        return cast(bool, result)
+        keys = [rvals[x] for x in self._cache_key_order]
+        with filter_policy(self.model.model["p"]["p"].policy, *keys):
+            return cast(bool, super().enforce(*rvals))

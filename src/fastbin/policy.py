@@ -1,9 +1,8 @@
-from typing import Any, Dict, Iterable, Optional, Sequence, Set, cast
+from contextlib import contextmanager
+from typing import Any, Container, Dict, Iterable, Iterator, Optional, Sequence, Set, cast
 
 
-def in_cache(
-    cache: Dict[str, Any], keys: Sequence[str]
-) -> Optional[Set[Sequence[str]]]:
+def in_cache(cache: Dict[str, Any], keys: Sequence[str]) -> Optional[Set[Sequence[str]]]:
     if keys[0] in cache:
         if len(keys) > 1:
             return in_cache(cache[keys[-0]], keys[1:])
@@ -12,7 +11,7 @@ def in_cache(
         return None
 
 
-class FilteredPolicy:
+class FilterablePolicy(Container[Sequence[str]]):
     _cache: Dict[str, Any]
     _current_filter: Optional[Set[Sequence[str]]]
     _cache_key_order: Sequence[int]
@@ -22,13 +21,15 @@ class FilteredPolicy:
         self._current_filter = None
         self._cache_key_order = cache_key_order
 
-    def __iter__(self) -> Iterable[Sequence[str]]:
+    def __iter__(self) -> Iterator[Sequence[str]]:
         yield from self.__get_policy()
 
     def __len__(self) -> int:
         return len(list(self.__get_policy()))
 
-    def __contains__(self, item: Sequence[str]) -> bool:
+    def __contains__(self, item: object) -> bool:
+        if not isinstance(item, (list, tuple)) or len(self._cache_key_order) >= len(item):
+            return False
         keys = [item[x] for x in self._cache_key_order]
         exists = in_cache(self._cache, keys)
         if not exists:
@@ -61,9 +62,7 @@ class FilteredPolicy:
         if self._current_filter is not None:
             return (list(x) for x in self._current_filter)
         else:
-            return (
-                list(v2) for v in self._cache.values() for v1 in v.values() for v2 in v1
-            )
+            return (list(v2) for v in self._cache.values() for v1 in v.values() for v2 in v1)
 
     def apply_filter(self, *keys: str) -> None:
         value = in_cache(self._cache, keys)
@@ -71,3 +70,12 @@ class FilteredPolicy:
 
     def clear_filter(self) -> None:
         self._current_filter = None
+
+
+@contextmanager
+def filter_policy(policy: FilterablePolicy, *keys: str) -> Iterator[None]:
+    try:
+        policy.apply_filter(*keys)
+        yield
+    finally:
+        policy.clear_filter()

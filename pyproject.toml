@@ -23,6 +23,29 @@ flake8-isort = "^4.0.0"
 eradicate = "^1.0"
 gitlint = "^0.12.0"
 
+[tool.isort]
+profile="black"
+src_paths="src"
+line_length=120
+
+
+[tool.black]
+line-length = 120
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.idea
+  | \.vscode
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
