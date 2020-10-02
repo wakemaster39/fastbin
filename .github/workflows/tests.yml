@@ -22,7 +22,7 @@ jobs:
       - name: pytest
         run: poetry run python -m pytest --cov ./src --cov-report term-missing
 
-  Linting:
+  linting:
     needs: pytest
     runs-on: ubuntu-latest
 
@@ -48,7 +48,9 @@ jobs:
         run: poetry run mypy ./src ./tests
 
   pytest-matrix:
-    needs: pytest
+    needs:
+      - pytest
+      - linting
     strategy:
       fail-fast: false
       matrix:
