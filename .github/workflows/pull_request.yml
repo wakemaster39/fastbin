@@ -37,12 +37,16 @@ jobs:
       - name: poetry install
         run: poetry install
       - name: poetry run
+        if: ${{ always() }}
         run: poetry run isort -v -c .
       - name: poetry run
+        if: ${{ always() }}
         run: poetry run black --check -v .
       - name: poetry run
+        if: ${{ always() }}
         run: poetry run flake8 -v .
       - name: poetry run
+        if: ${{ always() }}
         run: poetry run mypy ./src ./tests
 
   pytest-matrix:
