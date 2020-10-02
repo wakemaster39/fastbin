@@ -1,3 +1,3 @@
 
 def test_dummy() -> None:
-    pass
+    assert True
