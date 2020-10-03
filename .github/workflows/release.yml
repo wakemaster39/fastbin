@@ -1,3 +1,4 @@
+---
 name: Release
 
 on:
@@ -6,20 +7,22 @@ on:
       - '*.*.*'
 
 jobs:
-  Linux:
+  release:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-#      - name: Get tag
-#        id: tag
-#        run: |
-#          echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
-#      - name: Building release
-#        run: |
-#          make linux_release
-#      - name: Upload distributions artifacts
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: pendulum-dist
-#          path: dist/wheelhouse
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Run image
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.0.10
+      - name: poetry install
+        run: poetry install
+      - name: pytest
+        run: poetry build
+      - name: publish
+        run: poetry publish
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.POETRY_PYPI_TOKEN_PYPI }}
