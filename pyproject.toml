@@ -6,7 +6,7 @@ authors = ["Cameron Hurst <cameron.a.hurst@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6"
 casbin = "^0.8.4"
 
 [tool.poetry.dev-dependencies]
