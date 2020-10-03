@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastbin"
-version = "0.1.0"
+version = "0.1.2"
 description = "Performance orientated improvements to pycasbin"
 authors = ["Cameron Hurst <cameron.a.hurst@gmail.com>"]
 license = "MIT"
