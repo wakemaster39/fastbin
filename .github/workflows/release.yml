@@ -20,7 +20,7 @@ jobs:
           poetry-version: 1.0.10
       - name: poetry install
         run: poetry install
-      - name: pytest
+      - name: poetry build
         run: poetry build
       - name: publish
         run: poetry publish
