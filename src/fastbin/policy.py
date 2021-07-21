@@ -36,6 +36,11 @@ class FilterablePolicy(Container[Sequence[str]]):
             return False
         return tuple(item) in exists
 
+    def __getitem__(self, item) -> Sequence[str]:
+        for i, entry in enumerate(self):
+            if i == item:
+                return entry
+
     def append(self, item: Sequence[str]) -> None:
         cache = self._cache
         keys = [item[x] for x in self._cache_key_order]

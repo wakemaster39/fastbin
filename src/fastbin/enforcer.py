@@ -37,10 +37,9 @@ class FastEnforcer(CasbinEnforcer):
         cache_key_order: Sequence[int],
         model: T = None,
         adapter: T2 = None,
-        enable_log: bool = False,
     ):
         self._cache_key_order = cache_key_order
-        super().__init__(model=model, adapter=adapter, enable_log=enable_log)
+        super().__init__(model=model, adapter=adapter)
 
     def new_model(self, path: str = "", text: str = "") -> Model:
         """creates a model."""

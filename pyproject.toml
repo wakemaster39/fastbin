@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastbin"
-version = "0.1.2"
+version = "1.0.0"
 description = "Performance orientated improvements to pycasbin"
 authors = ["Cameron Hurst <cameron.a.hurst@gmail.com>"]
 license = "MIT"
@@ -10,8 +10,8 @@ repository = "https://github.com/wakemaster39/fastbin"
 keywords = ["casbin", "authorization"]
 
 [tool.poetry.dependencies]
-python = "^3.6"
-casbin = "^0.8.4"
+python = "^3.6.1"
+casbin = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0"
